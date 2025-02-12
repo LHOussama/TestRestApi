@@ -21,7 +21,7 @@ public class Company {
     private String address;
     private String website;
     private LocalDate foundedDate;
-    @OneToMany(mappedBy = "company",cascade = CascadeType.ALL ,fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "company", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     @ToString.Exclude
     private List<User> users=new ArrayList<>();
 

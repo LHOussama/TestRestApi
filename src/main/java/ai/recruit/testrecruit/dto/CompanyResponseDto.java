@@ -14,7 +14,7 @@ import java.util.List;
 @Data
 @Builder
 public class CompanyResponseDto {
-    private Long id;
+    private Long companyId;
     private String name;
     private String email;
     private String phoneNumber;
