@@ -13,10 +13,11 @@ import ai.recruit.testrecruit.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.mindrot.jbcrypt.BCrypt;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
-
 @Service
 @AllArgsConstructor
 @Transactional
@@ -28,6 +29,7 @@ public class IUserServiceImpl implements IUserService {
     private final UserRequestMapper userRequestMapper;
 
     @Override
+    @CachePut(value = "users", key = "#result.id")
     public UserResponseDto createUser(UserRequestDto userRequestDto) {
         if (userRepository.existsByEmail(userRequestDto.getEmail()))
             throw new BusinessException("Email already exists");
@@ -40,7 +42,7 @@ public class IUserServiceImpl implements IUserService {
         user.setCompany(company);
         return userResponseMapper.userToUserResponseDto(userRepository.save(user));
     }
-
+    @CachePut(value = "users", key = "#id")
     @Override
     public UserResponseDto updateUser(Long id,UserRequestDto userRequestDto) {
         User existingUser = userRepository.findById(id)
@@ -68,17 +70,17 @@ public class IUserServiceImpl implements IUserService {
 
         return userResponseMapper.userToUserResponseDto(userRepository.save(existingUser));
     }
-
+    @CacheEvict(value = "users", key = "#id")
     @Override
-    public boolean deleteUser(long id) {
+    public void deleteUser(long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("User not found with id: " + id));
 
         userRepository.delete(user);
-        return true;
     }
 
     @Override
+    @Cacheable(value = "users", key = "#id")
     public UserResponseDto findUser(long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("User not found with id: " + id));
@@ -87,6 +89,7 @@ public class IUserServiceImpl implements IUserService {
     }
 
     @Override
+    @Cacheable(value = "users")
     public List<UserResponseDto> findAllUsers() {
         return userRepository.findAll().stream()
                 .map(userResponseMapper::userToUserResponseDto)

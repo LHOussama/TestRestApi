@@ -16,8 +16,8 @@ public class UserResponseDto {
     private String email;
     private String phoneNumber;
     private String address;
+    private String password;
     @JsonFormat(pattern = "yyyy/MM/dd")
     private LocalDate dateOfBirth;
     private Role role;
-    private Long companyId;
 }

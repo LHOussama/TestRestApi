@@ -1,5 +1,4 @@
 package ai.recruit.testrecruit.web;
-
 import ai.recruit.testrecruit.dto.*;
 import ai.recruit.testrecruit.service.ICompanyService;
 import ai.recruit.testrecruit.service.IUserService;
@@ -7,9 +6,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
-
 @RestController
 @RequestMapping("/api/v1")
 @AllArgsConstructor

@@ -9,6 +9,9 @@ import ai.recruit.testrecruit.mapper.CompanyResponseMapper;
 import ai.recruit.testrecruit.repository.CompanyRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import java.util.List;
  @Service
@@ -20,6 +23,7 @@ import java.util.List;
      private CompanyRequestMapper companyRequestMapper;
 
      @Override
+     @CachePut(value = "companies", key = "#result.idCompany")
      public CompanyResponseDto createCompany(CompanyRequestDto companyRequestDto) {
          if(companyRepository.existsByName(companyRequestDto.getName()))
              throw new BusinessException("Name already exists");
@@ -32,6 +36,7 @@ import java.util.List;
      }
 
      @Override
+     @CachePut(value = "companies", key = "#id")
      public CompanyResponseDto updateCompany(Long id, CompanyRequestDto companyRequestDto) {
          Company company = companyRepository.findById(id)
                  .orElseThrow(() -> new NotFoundException("Company not found with id: " + id));
@@ -51,7 +56,8 @@ import java.util.List;
      }
 
      @Override
-     public CompanyResponseDto deleteCompany(long id) {
+     @CacheEvict (value = "companies", key = "#id")
+     public void deleteCompany(long id) {
          Company company = companyRepository.findById(id)
                  .orElseThrow(() -> new NotFoundException("Company not found with id: " + id));
 
@@ -61,10 +67,10 @@ import java.util.List;
 
          CompanyResponseDto responseDto = companyResponseMapper.companyToCompanyResponseDto(company);
          companyRepository.delete(company);
-         return responseDto;
      }
 
      @Override
+     @Cacheable(value = "companies", key = "#id")
      public CompanyResponseDto findCompanyById(long id) {
          Company company = companyRepository.findById(id)
                  .orElseThrow(() -> new NotFoundException("Company not found with id: " + id));
@@ -73,6 +79,7 @@ import java.util.List;
      }
 
      @Override
+     @Cacheable(value = "companies")
      public List<CompanyResponseDto> findAllCompanies() {
          List<Company> companies = companyRepository.findAll();
          return companies.stream()
