@@ -11,7 +11,6 @@ import ai.recruit.testrecruit.mapper.UserResponseMapper;
 import ai.recruit.testrecruit.repository.CompanyRepository;
 import ai.recruit.testrecruit.repository.UserRepository;
 import jakarta.transaction.Transactional;
-import org.mapstruct.control.MappingControl;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;

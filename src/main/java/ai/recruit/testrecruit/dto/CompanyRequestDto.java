@@ -1,4 +1,5 @@
 package ai.recruit.testrecruit.dto;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,5 +15,6 @@ public class CompanyRequestDto {
     private String phoneNumber;
     private String address;
     private String website;
+    @JsonFormat(pattern = "yyyy/MM/dd")
     private LocalDate foundedDate;
 }
